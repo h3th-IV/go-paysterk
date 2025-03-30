@@ -7,7 +7,26 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
+
+// PaystackCLient handles API requests
+type PaystackCLient struct {
+	SecretKey string
+	BaseURL   string
+	Client    *http.Client
+}
+
+// NewClient initializes a PaystackClient
+func NewClient(secretKey string) *PaystackCLient {
+	return &PaystackCLient{
+		SecretKey: secretKey,
+		BaseURL:   "https://api.paystack.co",
+		Client: &http.Client{
+			Timeout: 10 * time.Second,
+		},
+	}
+}
 
 // doRequest is used to make HTTP request to various endpoints
 func (c *PaystackCLient) doRequest(method, endpoint string, payload interface{}) ([]byte, error) {
