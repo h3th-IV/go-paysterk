@@ -66,6 +66,20 @@ type Transaction struct {
 	PosTransactionData map[string]interface{}   `json:"pos_transaction_data"`
 }
 
+// Meta represents pagination metadata
+type Meta struct {
+	Next     string `json:"next"`
+	Previous string `json:"previous"`
+	PerPage  int    `json:"perPage"`
+}
+
+// TransactionResponse represents the response from Paystack API
+type TransactionResponse struct {
+	Status  bool        `json:"status"`
+	Message string      `json:"message"`
+	Data    Transaction `json:"data"`
+}
+
 // InitializeTransactionRequest represents the request payload
 type InitializeTransactionRequest struct {
 	Email    string `json:"email"`
@@ -80,16 +94,15 @@ type InitializeTransactionResponse struct {
 	Data    struct {
 		AuthorizationURL string `json:"authorization_url"`
 		Reference        string `json:"reference"`
+		AccessCode       string `json:"access_code"`
 	} `json:"data"`
 }
 
 // VerifyTransactionResponse represents the verification response
 type VerifyTransactionResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-	Data    struct {
-		Status string `json:"status"`
-	} `json:"data"`
+	Status  bool        `json:"status"`
+	Message string      `json:"message"`
+	Data    Transaction `json:"data"`
 }
 
 // InitializeTransactioc starts a new payment process
@@ -116,7 +129,7 @@ func (c *PaystackCLient) InitializeTransaction(email string, amount int, currenc
 
 // Transaction verification
 // VerifyTransaction checks the status of a transactioin using the transaction reference
-func (c *PaystackCLient) VerifyTransaction(reference string) (*VerifyTransactionResponse, error) {
+func (c *PaystackCLient) VerifyTransaction(reference string) (*TransactionResponse, error) {
 	//Make request
 	endpoint := fmt.Sprintf("transaction/verify/%s", reference)
 	body, err := c.doRequest(http.MethodGet, endpoint, reference)
@@ -125,21 +138,13 @@ func (c *PaystackCLient) VerifyTransaction(reference string) (*VerifyTransaction
 	}
 
 	//Parse response
-	var response VerifyTransactionResponse
+	var response TransactionResponse
 	if err := json.Unmarshal(body, &response); err != nil {
 		return nil, err
 	}
 	return &response, nil
 }
 
-// Meta represents pagination metadata
-type Meta struct {
-	Next     string `json:"next"`
-	Previous string `json:"previous"`
-	PerPage  int    `json:"perPage"`
-}
-
-// TransactionsResponse represents the response from Paystack API
 type TransactionsResponse struct {
 	Status  bool          `json:"status"`
 	Message string        `json:"message"`
@@ -171,11 +176,7 @@ func (c *PaystackCLient) FetchTransactionByID(id int) (*Transaction, error) {
 		return nil, err
 	}
 
-	var response struct {
-		Status  bool        `json:"status"`
-		Message string      `json:"message"`
-		Data    Transaction `json:"data"`
-	}
+	var response TransactionResponse
 	if err := json.Unmarshal(body, &response); err != nil {
 		return nil, err
 	}

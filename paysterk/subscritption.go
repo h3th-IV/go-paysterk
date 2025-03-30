@@ -177,7 +177,7 @@ func (c *PaystackCLient) CreateSubscription(customerEmail, planCode, authCode st
 		Authorization: authCode,
 	}
 
-	body, err := c.doRequest("POST", "subscription", payload)
+	body, err := c.doRequest(http.MethodPost, "subscription", payload)
 	if err != nil {
 		return nil, err
 	}
@@ -219,7 +219,7 @@ func (c *PaystackCLient) DisableSubscription(subscriptionCode, emailToken string
 		"token": emailToken,
 	}
 
-	_, err := c.doRequest("POST", "subscription/disable", payload)
+	_, err := c.doRequest(http.MethodPost, "subscription/disable", payload)
 	return err
 }
 
@@ -230,6 +230,6 @@ func (c *PaystackCLient) EnableSubscription(subscriptionCode, emailToken string)
 		"token": emailToken,
 	}
 
-	_, err := c.doRequest("POST", "subscription/enable", payload)
+	_, err := c.doRequest(http.MethodPost, "subscription/enable", payload)
 	return err
 }
