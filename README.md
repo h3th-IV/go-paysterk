@@ -6,13 +6,13 @@ A Golang library for integrating with Paystack's payment API.
 go-paysterk is a Go client library for interacting with Paystack's API. It simplifies payment processing, transaction verification, transfers, and more.
 
 ## Features
-- [X]Initialize and verify transactions
-- [X]Manage subscriptions, plans and recurring billing
-- [X]Handle bank transfers and mobile money payments
-- [ ]Split payments and manage subaccounts
-- [ ]Process refunds and chargebacks
-- [X]Webhook support for real-time transaction updates
-- [X]Charge Usage if you dont want redirect users to paystack checkout
+-[X]Initialize and verify transactions
+-[X]Manage subscriptions, plans and recurring billing
+-[X]Handle bank transfers and mobile money payments
+-[ ]Split payments and manage subaccounts
+-[ ]Process refunds and chargebacks
+-[X]Webhook support for real-time transaction updates
+-[X]Charge Usage if you dont want redirect users to paystack checkout
 
 ## Installation
 ```sh
